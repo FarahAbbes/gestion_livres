@@ -29,16 +29,37 @@ export const fetchLivre = async (req, res) => {
 export const createLivre = async (req, res) => {
   try {
     console.log("body:", req.body);
+
+    const { ecrivaint } = req.body;
+
+    // Vérifier si un auteur est fourni
+    if (!ecrivaint) {
+      return res.status(400).json({
+        message: "Un auteur (ecrivaint) doit être spécifié.",
+      });
+    }
+
+    // Vérifier si l'auteur a déjà écrit d'autres livres
+    const existingBooks = await Livres.find({ ecrivaint });
+    if (existingBooks.length === 0) {
+      return res.status(400).json({
+        message: "L'auteur doit avoir écrit au moins un autre livre avant.",
+      });
+    }
+
+    // Si tout est valide, créer le livre
     const livre = new Livres(req.body);
     await livre.save();
-    res.status(201).json({ model: livre, message: "success" });
+
+    res.status(201).json({ model: livre, message: "Livre créé avec succès" });
   } catch (error) {
     res.status(400).json({
       error: error.message,
-      message: "donnés invalides",
+      message: "Données invalides",
     });
   }
 };
+
 export const updateLivre = async (req, res) => {
   try {
     console.log("id:", req.params.id);

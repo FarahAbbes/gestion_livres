@@ -7,6 +7,8 @@ import routerAuthor from "./routes/author.js";
 import routerLivres from "./routes/Livres.js";
 import routerCategory from "./routes/category.js";
 
+import eventRoutes from "./routes/eventRoutes.js";
+
 const app = express();
 
 // Middleware
@@ -18,6 +20,7 @@ app.use("/api/livres", routerLivres);
 app.use("/api/author", routerAuthor);
 app.use("/api/auth", routerAuth);
 app.use("/api/categories", routerCategory);
+app.use("/api", eventRoutes); // Routes pour les événements
 
 // Database connection
 const DB_URI =
